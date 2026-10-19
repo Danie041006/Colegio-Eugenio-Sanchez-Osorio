@@ -2,123 +2,145 @@
 
 Estas reglas aplican a cualquier agente (OpenCode, Claude Code, Cursor, etc.) que trabaje en este repositorio.
 
-> Ruta por defecto: **Next.js**. Si el proyecto se decide implementar en Framer, este archivo no aplica; usar `BRIEF.md` y el Prompt 3 de `PROMPTS.md`.
-
 ## Antes de escribir código
 
-1. Leer `BRIEF.md` completo. Es la fuente de verdad del producto y del diseño.
-2. Leer el prompt de la tarea en `PROMPTS.md` y respetar su alcance.
-3. Si falta un dato del colegio (fechas, contacto, cifras, testimonios, fotos), escribir `TODO` visible y listarlo al final. **No inventarlo.**
-4. Si una ambigüedad afecta la arquitectura o el contenido, hacer máximo 3 preguntas antes de empezar.
-5. No agregar dependencias sin justificar y pedir confirmación.
+1. Leer `README.md` completo. Es la fuente de verdad del producto.
+2. El modelo de datos lo define Daniel por separado. No crear ni modificar tablas, SQL ni esquemas sin confirmación.
+3. Si falta un dato del colegio (fechas, tarifas, teléfonos, grados, secciones), escribir `TODO` visible y listarlo al final. **No inventarlo.**
+4. Si una ambigüedad afecta el modelo de datos, la seguridad o los pagos, preguntar antes de implementar.
+5. No agregar dependencias sin justificarlas y pedir confirmación.
+
+## Qué es este proyecto
+
+Sistema interno de gestión de pagos para el Colegio Eugenio Sánchez Osorio. **No es una landing page.** Tiene login, roles, panel administrativo, registro de estudiantes, cargos, pagos, abonos, comprobantes, reportes y portal de representantes. Debe funcionar sin internet al menos para registrar pagos y sincronizar después.
 
 ## Stack
 
 - Next.js con App Router y TypeScript estricto.
 - Tailwind CSS v4.
-- `shadcn/ui` para componentes base (instalar solo lo que se use).
-- `next/font` para Fraunces e Inter.
-- `next/image` para todas las imágenes.
-- `lucide-react` para iconos.
-- Zod para validación de formularios.
-- Sin librerías de animación pesadas; CSS o Motion solo si aporta.
+- `shadcn/ui` para componentes base.
+- `react-hook-form` + Zod para formularios.
+- PostgreSQL + Drizzle ORM.
+- Auth.js o Supabase Auth. Nunca autenticación casera.
+- Almacenamiento privado para fotos y comprobantes, con URLs firmadas.
+- PWA + IndexedDB para la cola offline.
+- Sin librerías de UI adicionales sin justificar.
+
+## Roles y permisos
+
+| Rol | Permisos |
+|---|---|
+| `ADMINISTRADOR` | Todo: usuarios, tarifas, pagos, anulaciones, reportes, configuración |
+| `GESTOR` | Registrar estudiantes, registrar pagos, consultar estados de pago, solicitar anulaciones |
+| `REPRESENTANTE` | Ver solo sus estudiantes autorizados, historial, saldos y comprobantes |
+
+Reglas:
+
+- El backend valida permisos en cada endpoint. No confiar solo en la UI.
+- El representante nunca accede a estudiantes que no tenga asociados.
+- Solo el administrador autoriza anulaciones de pagos confirmados.
+- El gestor no puede modificar pagos históricos ni tarifas.
+
+## Contrato de datos
+
+- Dinero: `numeric(14,2)` o enteros en centavos. **Nunca `float`.**
+- Cada cargo, tarifa y pago tiene `currency_id`. Al inicio solo COP está activa.
+- Un cargo guarda `original_amount`; el saldo se calcula con las aplicaciones.
+- Un pago puede cubrir varios cargos (tabla `payment_applications`).
+- Un cargo puede pagarse con varios abonos.
+- La suma aplicada a un pago no puede superar el monto recibido.
+- La suma aplicada a un cargo no puede superar su importe original.
+- Pago y cargo deben usar la misma moneda para aplicarse directamente.
+- Pagos confirmados no se borran: se anulan con motivo, responsables y fecha.
+- El comprobante tiene número único. En offline puede ser provisional.
+- No hay vencimiento obligatorio ni mora en la primera versión.
+- Las tarifas tienen vigencia y no se modifican retroactivamente.
+- Los grados, secciones y períodos conservan historial: no se sobrescriben.
+
+## Contrato de seguridad
+
+- Contraseñas con hash seguro (Argon2 o bcrypt). Nunca en texto.
+- **No usar el número de documento como contraseña.** Se puede usar como nombre de usuario, pero la contraseña inicial debe ser temporal y aleatoria.
+- Los datos de menores son sensibles: permisos mínimos, cifrado en tránsito, respaldos protegidos.
+- Fotos de estudiantes en almacenamiento privado con URLs firmadas y expiración.
+- Registrar auditoría de toda operación financiera: quién, qué, cuándo y por qué.
+- No guardar contraseñas, tokens ni datos sensibles en la auditoría.
+- La baja de un usuario no elimina registros financieros históricos.
+- Validar y sanitizar toda entrada. Proteger contra inyección SQL, XSS y CSRF.
+
+## Contrato de funcionamiento offline
+
+- La app debe cargar y permitir registrar pagos sin conexión.
+- Cada operación lleva un `operation_id` único generado en el cliente.
+- El servidor debe ser idempotente: la misma operación no se procesa dos veces.
+- Los pagos creados offline se marcan `PENDING_SYNC`.
+- El comprobante offline se marca como **provisional**.
+- La numeración definitiva de recibos se asigna en el servidor.
+- Los pagos confirmados no se reemplazan por una versión local más reciente sin validar.
+- La app debe indicar claramente qué está pendiente de sincronizar.
+
+## Contrato de interfaz
+
+- Blanco dominante y azul rey; el azul rey se usa con intención.
+- Tokens en `app/globals.css`. **Nunca HEX sueltos en componentes.**
+- Colores: `royal #1B3A8F`, `royal-dark #122A6B`, `navy #0F172A`, `muted #5A6475`, `white #FFFFFF`, `mist #F4F7FC`, `sky #DCE6F7`, `sky-strong #B9CCEE`.
+- Tipografía Inter. Títulos con peso alto; datos en tablas legibles.
+- Patrones: menú lateral, encabezado con título y acción principal, tablas con filtros, formularios en tarjetas, badges de estado, modales para confirmaciones.
+- Estados obligatorios: vacío, cargando, error, éxito, sin conexión, pendiente de sincronizar.
+- Un `h1` por página y una acción principal por pantalla.
+- Mobile-first; probar 360, 768, 1024 y 1440 px.
+- Contraste AA, foco visible, navegación con teclado, labels visibles, botones de 44 px.
+- Sin gradientes morados, glassmorphism, carruseles automáticos ni animaciones decorativas.
+
+## Convenciones de código
+
+- TypeScript estricto; prohibido `any` implícito.
+- Server Components por defecto. `"use client"` solo para interactividad real.
+- Componentes en PascalCase, archivos en kebab-case, props tipadas.
+- Clases Tailwind con `cn()`; variantes con `cva` cuando haya más de dos.
+- Lógica de negocio en `lib/` o `services/`, no dentro de los componentes.
+- Validaciones compartidas entre cliente y servidor con Zod.
+- Sin `console.log` en producción.
+- Sin componentes de más de ~150 líneas: dividir.
+- Reutilizar primitivas de `components/ui` antes de crear nuevas.
 
 ## Estructura objetivo
 
 ```text
 app/
-  layout.tsx
-  globals.css
-  page.tsx
-  admisiones/page.tsx
-  niveles/page.tsx
-  niveles/[nivel]/page.tsx
-  vida-escolar/page.tsx
-  nosotros/page.tsx
-  contacto/page.tsx
-  familias/page.tsx
-  politica-de-privacidad/page.tsx
-  not-found.tsx
+  (auth)/login/page.tsx
+  (app)/
+    dashboard/page.tsx
+    estudiantes/
+    estudiantes/[id]/page.tsx
+    pagos/nuevo/page.tsx
+    comprobantes/[id]/page.tsx
+    cobros/page.tsx
+    reportes/page.tsx
+    usuarios/page.tsx
+    anulaciones/page.tsx
+  (portal)/
+    mis-hijos/page.tsx
+    mis-hijos/[id]/page.tsx
 components/
-  site/        # header, footer, secciones y componentes del sitio
-  ui/          # primitivas shadcn/ui
+  ui/
+  app/
+  portal/
 content/
-  site.ts      # nombre, contacto, horarios, redes, fechas de admisión
-  levels.ts
-  faqs.ts
-  news.ts
-  testimonials.ts
+  site.ts
+db/
+  schema.ts
+  seed.ts
 lib/
-  utils.ts
-  validation.ts
-public/
-  images/
+  auth.ts
+  permissions.ts
+  money.ts
+  offline/
+services/
+  payments.ts
+  charges.ts
+  receipts.ts
 ```
-
-## Contrato de diseño
-
-- Tokens definidos en `app/globals.css` como variables CSS. **Nunca HEX sueltos en componentes.**
-- Colores: `royal #1B3A8F`, `royal-dark #122A6B`, `navy #0F172A`, `muted #5A6475`, `white #FFFFFF`, `mist #F4F7FC`, `sky #DCE6F7`, `sky-strong #B9CCEE`.
-- El blanco domina. El azul rey se usa para acciones, títulos y bloques puntuales; no para pintar todas las secciones.
-- Tipografía: Fraunces para display, Inter para texto. Máximo dos familias.
-- Escala de espaciado base 4 px. Secciones: 96–120 px desktop, 48–64 px mobile.
-- Radios: 8 px inputs/botones, 16 px tarjetas, 24 px bloques destacados.
-- Sombras mínimas; preferir borde de 1 px.
-- Un `h1` por página. Una acción primaria por bloque.
-- Mobile-first. Probar 360, 768, 1024 y 1440 px.
-- Movimiento de 150–300 ms, solo funcional, con `prefers-reduced-motion`.
-- Fotografía real del colegio. **Nunca imágenes de niños generadas por IA.**
-
-## Contrato de contenido
-
-- Todo dato de contacto, horario, redes o fecha de admisión vive en `content/site.ts`.
-- Niveles, FAQ, noticias y testimonios en archivos tipados dentro de `content/`.
-- Nada de lorem ipsum ni copy genérico.
-- Los textos deben ser específicos y verificables. Evitar “excelencia”, “formación integral”, “líderes del mañana”.
-- Los CTA dicen qué pasa al hacer clic: “Agendar una visita”, no “Enviar”.
-- Fechas en formato explícito y con zona horaria cuando corresponda.
-
-## Contrato de accesibilidad (WCAG 2.2 AA)
-
-- Landmarks: `header`, `nav`, `main`, `footer`; skip link al inicio.
-- Navegación completa con teclado y `:focus-visible` claro.
-- Contraste mínimo 4.5:1 en texto normal y 3:1 en texto grande.
-- Labels visibles en todos los campos; errores en texto, no solo en color.
-- `alt` descriptivo en imágenes con contenido; `alt=""` en decorativas.
-- No usar `div` o `span` clickeables. Usar `button` o `a`.
-- Un solo `h1`; jerarquía de encabezados sin saltos.
-- Respetar `prefers-reduced-motion`.
-- Tamaño mínimo de objetivo táctil: 44×44 px.
-
-## Formularios
-
-- Validación en cliente y servidor con Zod.
-- Campos mínimos: nombre, email, teléfono, nivel de interés, mensaje.
-- Estados: idle, validando, enviando, éxito, error.
-- Mantener los datos si falla el envío.
-- Confirmación clara: qué se envió, qué pasa después y en cuánto tiempo.
-- Enlace a política de privacidad junto al botón.
-- `autocomplete` y `inputmode` correctos.
-
-## SEO y rendimiento
-
-- Metadata API de Next.js por página: title, description, canonical, Open Graph.
-- `sitemap.ts` y `robots.ts`.
-- Datos estructurados `EducationalOrganization` y `FAQPage` cuando aplique.
-- Imágenes AVIF/WebP con dimensiones explícitas; hero con prioridad, resto lazy.
-- Presupuesto: JS inicial < 150 KB gzip; LCP < 2.5 s; CLS < 0.1; INP < 200 ms.
-- URLs legibles y estables.
-
-## Código
-
-- TypeScript estricto; prohibido `any` implícito.
-- Server Components por defecto. `"use client"` solo para interactividad real.
-- Componentes en PascalCase, props tipadas, archivos en kebab-case.
-- Clases Tailwind con `cn()`; variantes con `cva` cuando haya más de dos.
-- Sin estilos inline salvo variables dinámicas justificadas.
-- Sin `console.log` en producción.
-- Sin componentes gigantes: si supera ~150 líneas, dividir.
-- Reutilizar primitivas de `components/ui` antes de crear nuevas.
 
 ## Comandos
 
@@ -130,29 +152,34 @@ npm run dev
 npm run build
 npm run lint
 npm run typecheck
+npm run db:push
+npm run db:seed
 ```
 
 Si un comando no existe, no lo inventes: agrégalo al `package.json` o pregunta.
 
 ## Definition of Done
 
-- [ ] Contenido real o `TODO` explícito; sin lorem ipsum.
+- [ ] El cambio respeta roles y permisos.
+- [ ] Los montos usan tipo decimal y moneda explícita.
+- [ ] No se borran registros financieros.
+- [ ] Se registra auditoría cuando aplica.
+- [ ] Formularios con validación cliente y servidor.
+- [ ] Estados vacío, cargando, error y éxito implementados.
 - [ ] Responsive verificado en 360, 768, 1024 y 1440.
-- [ ] Teclado + foco visible + axe sin errores críticos.
-- [ ] Contraste AA.
-- [ ] Formularios con validación y estados.
-- [ ] Metadata, canonical y OG.
-- [ ] Sin errores de consola ni hidratación.
+- [ ] Teclado, foco visible y contraste AA.
+- [ ] Sin errores de consola ni de hidratación.
 - [ ] `npm run build`, `lint` y `typecheck` pasan.
-- [ ] Captura o descripción de cómo probar el cambio.
+- [ ] Datos faltantes marcados como `TODO` y listados.
 
 ## Prohibiciones
 
-- Inventar datos, fechas, cifras, testimonios o fotos.
-- Generar imágenes de niños o docentes con IA.
-- Degradados azul-morado o azul-turquesa, glassmorphism, neón o emojis como iconos.
-- Carruseles automáticos, parallax pesado o texto animado letra por letra.
-- Secciones de tres tarjetas genéricas sin contenido diferenciado.
-- Hardcodear contacto, fechas o navegación dentro de componentes.
-- Copiar plantillas completas sin adaptarlas al brief.
-- Hacer `force push`, reescribir historia o borrar trabajo sin confirmación.
+- Inventar datos, tarifas, fechas, cifras o testimonios.
+- Generar imágenes de niños con IA.
+- Usar contraseñas en texto o el documento como contraseña.
+- Borrar físicamente pagos, cargos o estudiantes con historial financiero.
+- Mezclar monedas sin una regla explícita de conversión.
+- Exponer fotos de menores con URLs públicas permanentes.
+- Gradientes morados, glassmorphism, neón o emojis como iconos.
+- Copiar plantillas sin adaptarlas al flujo del colegio.
+- Hacer `force push` o reescribir historia sin confirmación.
