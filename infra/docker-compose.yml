@@ -1,0 +1,21 @@
+services:
+  db:
+    image: postgres:16
+    container_name: colegio_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: colegio
+      POSTGRES_USER: colegio
+      POSTGRES_PASSWORD: colegio_dev
+    ports:
+      - "5433:5432"
+    volumes:
+      - colegio_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U colegio -d colegio"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  colegio_pgdata:

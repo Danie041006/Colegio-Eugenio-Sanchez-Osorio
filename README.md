@@ -439,8 +439,8 @@ El frontend y la API se sirven desde el mismo dominio para evitar CORS y simplif
 | `docs/infraestructura.md` | VPS, Docker, Caddy, respaldos y operación. |
 | `docs/plan-mvp.md` | Plan de trabajo por fases, equipo y riesgos. |
 | `docs/skills.md` | Skills de diseño y desarrollo disponibles, y cómo usarlas. |
-| `docs/modelo-datos-mvp.md` | Pendiente: lo define Daniel antes de crear tablas. |
-| `backend/alembic/versions/` | Migraciones de base de datos (cuando exista código). |
+| `docs/modelo-datos-mvp.md` | Modelo lógico del MVP; identidad y academia ya implementadas. |
+| `backend/alembic/versions/` | Migraciones; la primera crea identidad y academia. |
 | `docs/cotizacion.md` | Pendiente: precio y condiciones comerciales. |
 | `docs/archive/landing/` | Documentos viejos del concepto de landing. Ignorar. |
 
@@ -463,7 +463,9 @@ El frontend y la API se sirven desde el mismo dominio para evitar CORS y simplif
 
 ## 11. Estado actual y próximo paso
 
-Hoy el repositorio contiene la documentación del producto, las reglas de implementación, las decisiones de arquitectura y un **frontend modular** en `frontend/` que conserva el diseño aprobado. El backend, la base de datos y la autenticación todavía no están implementados.
+Hoy el repositorio contiene la documentación del producto, las reglas de implementación, las decisiones de arquitectura, un **frontend modular** en `frontend/` que conserva el diseño aprobado y un **backend base** en `backend/` con FastAPI, SQLAlchemy y Alembic.
+
+La primera migración ya crea las tablas de **identidad y academia** en PostgreSQL: personas, usuarios, roles, estudiantes, representantes, grados, períodos, secciones y matrículas. La autenticación y los módulos de cobros y pagos todavía están pendientes.
 
 La arquitectura confirmada es:
 
@@ -473,6 +475,6 @@ La arquitectura confirmada es:
 - Un VPS Contabo con Docker Compose y Caddy.
 - Cloudflare R2 para archivos privados y respaldos.
 
-El siguiente paso es revisar el diseño de Figma, cerrar el modelo de datos con Daniel y construir el esqueleto desplegable: login, estudiantes y un “hello world” con HTTPS, base de datos y respaldo funcionando.
+El siguiente paso es implementar autenticación con `fastapi-users` y los endpoints de estudiantes para conectar el frontend con datos reales. Después siguen cobros, pagos y comprobantes.
 
 No se debe empezar por pagos ni por offline. Primero se valida el flujo base y la infraestructura.

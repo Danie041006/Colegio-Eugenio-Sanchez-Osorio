@@ -110,12 +110,15 @@ El equipo quiere reducir riesgos de dependencias y mantener un entorno reproduci
 
 ## ADR-005 — Librería de autenticación
 
-**Estado:** Pendiente.
+**Estado:** Aceptada.
 
-**Opciones:**
-- `fastapi-users`.
-- Authlib.
-- Otra librería consolidada compatible con FastAPI.
+**Decisión:** `fastapi-users`.
+
+**Razones:**
+- Trae login, hash de contraseña, recuperación y transporte por cookies.
+- Se integra con FastAPI y permite personalizar el modelo de usuario.
+- Evita autenticación casera.
+- Soporta cookies `HttpOnly`.
 
 **Requisitos mínimos:**
 - Cookies `HttpOnly`, `Secure` y `SameSite`.
@@ -126,8 +129,7 @@ El equipo quiere reducir riesgos de dependencias y mantener un entorno reproduci
 - No usar el documento como contraseña.
 - No autenticación casera.
 
-**Pendiente:**
-Elegir la librería antes de implementar login. La decisión se registra aquí.
+**Pendiente de implementación:** endpoints de login, activación, cambio de PIN y recuperación en oficina.
 
 ## ADR-006 — Respaldos en Cloudflare R2
 
@@ -150,12 +152,28 @@ La base de datos estará en el VPS. Los snapshots de Contabo no son suficientes 
 - Si el colegio necesita menor pérdida, se evalúa `pg_dump` horario o WAL archiving.
 - La clave de cifrado se guarda fuera del VPS.
 
+## ADR-007 — Comprobante imprimible y snapshot
+
+**Estado:** Aceptada.
+
+**Decisión:**
+- El comprobante se puede imprimir desde una vista HTML.
+- El backend genera un PDF descargable.
+- Al confirmar el pago se guarda un snapshot de los datos del recibo.
+- El PDF se genera desde el snapshot, no desde los datos actuales.
+- Un recibo anulado se conserva y se marca como **ANULADO**.
+- El recibo offline es provisional hasta que el servidor asigne el número definitivo.
+
+**Consecuencias:**
+- Un cambio posterior en el nombre del estudiante o del concepto no altera el recibo histórico.
+- Se necesita una librería de PDF en el backend (WeasyPrint o ReportLab).
+- El snapshot se guarda en `payments.receipt_snapshot` y el PDF en almacenamiento privado.
+
 ## Decisiones pendientes
 
-- Librería de autenticación.
 - Dominio definitivo.
 - Plan y región de Contabo.
 - Buckets y credenciales de R2.
 - RPO/RTO aceptados por el colegio.
-- Modelo de datos definitivo (responsabilidad de Daniel).
+- Modelo de datos de cobros y pagos (siguiente migración).
 - Política de retiro, mensualidades y descuento de hermanos.
