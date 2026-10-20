@@ -14,6 +14,137 @@ ahora si, la IA  te va dar un análisis de lo que puedes hacer si?
 
 ---
 
+## Para empezar (bellota)
+
+Esta guía es para que puedas instalar el proyecto, verlo en tu computadora y editarlo sin miedo. El diseño que hiciste se conserva tal cual; solo lo dividimos en componentes para que sea más fácil mantenerlo.
+
+### 1. Instala lo necesario
+
+- **Git:** https://git-scm.com/downloads
+- **Node.js LTS:** https://nodejs.org/
+- **VS Code:** https://code.visualstudio.com/ (opcional, pero recomendado)
+- Una cuenta de GitHub.
+
+No necesitas instalar PostgreSQL ni el backend para ver el frontend por ahora.
+
+### 2. Clona el repositorio
+
+```bash
+git clone git@github.com:Danie041006/Colegio-Eugenio-Sanchez-Osorio.git
+cd Colegio-Eugenio-Sanchez-Osorio
+```
+
+### 3. Activa pnpm
+
+El proyecto usa **pnpm**, no npm.
+
+```bash
+corepack enable
+corepack prepare pnpm@10.18.0 --activate
+```
+
+Si `corepack enable` te da error de permisos, usa `corepack pnpm` en todos los comandos.
+
+### 4. Levanta el frontend
+
+```bash
+cd frontend
+pnpm install
+pnpm dev
+```
+
+Abre la URL que muestre la terminal. Normalmente es:
+
+```text
+http://localhost:5173
+```
+
+Si el puerto está ocupado, Vite usará el siguiente, por ejemplo `5174`.
+
+### 5. Dónde está cada cosa
+
+```text
+frontend/src/
+  app/            -> rutas, navegación y composición general
+  components/
+    app/          -> sidebar, topbar y menú móvil
+    ui/           -> botones, campos, tarjetas, badges, tablas
+  features/       -> pantallas por área
+    auth/
+    dashboard/
+    students/
+    payments/
+    receipts/
+    billing/
+    reports/
+    users/
+    annulments/
+    profile/
+    portal/
+    design/
+  styles/
+    globals.css   -> colores, tipografía y estilos visuales aprobados
+```
+
+### 6. Qué puedes editar
+
+- Textos de pantallas: dentro de `features/`.
+- Componentes reutilizables: dentro de `components/ui/`.
+- Navegación y rutas: `app/App.tsx`, `app/navigation.ts`.
+- Estilos visuales: `styles/globals.css`.
+
+**Importante:** `globals.css` es el diseño que hiciste. Si quieres cambiar colores, tamaños o jerarquía visual, hazlo en una rama aparte y avísame para revisarlo juntos.
+
+### 7. Qué no debes tocar todavía
+
+- `backend/` (aún no existe).
+- Base de datos o migraciones.
+- `AGENTS.md`, salvo que acordemos un cambio de reglas.
+- Los controles de cambio de rol y el selector de rol del login: son solo del prototipo y se quitarán cuando exista autenticación real.
+- `node_modules/`, `dist/` o archivos `.env`.
+
+### 8. Cómo hacer un cambio sin romper nada
+
+Crea una rama:
+
+```bash
+git switch -c feat/mi-cambio
+```
+
+Edita lo que necesites. Antes de subir, verifica:
+
+```bash
+cd frontend
+pnpm typecheck
+pnpm lint
+pnpm build
+```
+
+Si todo pasa:
+
+```bash
+git add .
+git commit -m "feat: describir el cambio"
+git push -u origin feat/mi-cambio
+```
+
+Luego abre un Pull Request en GitHub. No hagas push directo a `main`.
+
+### 9. Reglas de diseño
+
+- No cambies el diseño aprobado sin hablarlo.
+- No inventes datos reales de estudiantes.
+- Donde falte información, deja `TODO`.
+- No uses fotos de niños generadas con IA.
+- Mantén el blanco dominante y el azul rey con intención.
+- Prueba en computadora y en celular.
+
+### 10. Si algo falla
+
+No borres archivos ni hagas `force push`. Copia el error, toma una captura y mándamela. Lo revisamos juntos.
+
+---
+
 ## 0. Lo que es y lo que NO es
 
 | Es | No es |
@@ -270,20 +401,29 @@ REGLAS
 
 ---
 
-## 8. Stack previsto
+## 8. Stack decidido
 
 | Capa | Tecnología |
 |---|---|
-| Frontend | Next.js + TypeScript + Tailwind CSS + shadcn/ui |
+| Frontend | Vite + React + TypeScript estricto + Tailwind CSS v4 + shadcn/ui |
+| Runtime y paquetes | Node.js LTS + pnpm |
+| Navegación | React Router |
+| Datos remotos | TanStack Query |
 | Formularios | React Hook Form + Zod |
-| Base de datos | PostgreSQL |
-| Acceso a datos | Drizzle ORM |
-| Autenticación | Auth.js o Supabase Auth |
-| Archivos (fotos, recibos) | Almacenamiento privado con URLs firmadas |
-| PDF de comprobantes | Generado desde la app o vista imprimible |
+| Backend | FastAPI + Python 3.12+ |
+| Validación | Pydantic v2 |
+| Base de datos | PostgreSQL 16 |
+| Acceso a datos | SQLAlchemy 2.0 |
+| Migraciones | Alembic |
+| Autenticación | `fastapi-users`, Authlib u otra librería consolidada; cookies HttpOnly |
+| Archivos (fotos, recibos) | Almacenamiento privado S3-compatible (Cloudflare R2) con URLs firmadas |
+| PDF de comprobantes | Generado en el backend |
 | Offline (fase 1) | PWA + IndexedDB + cola de sincronización |
-| Despliegue | Vercel o VPS |
+| Despliegue | Contabo VPS + Docker Compose + Caddy |
+| Respaldos | `pg_dump` cifrado + Cloudflare R2 |
 | Moneda | COP activa; campo de moneda en cargo, tarifa y pago |
+
+El frontend y la API se sirven desde el mismo dominio para evitar CORS y simplificar cookies y PWA. Vercel queda descartado para el MVP.
 
 ---
 
@@ -292,10 +432,13 @@ REGLAS
 | Documento | Contenido |
 |---|---|
 | `README.md` | Esta guía. |
-| `docs/modelo-datos-mvp.md` | Entidades, relaciones y reglas del modelo de datos. |
-| `db/schema.sql` | Esquema PostgreSQL del MVP. |
-| `docs/plan-mvp.md` | Plan de trabajo por días, demo y riesgos. |
-| `docs/cotizacion.md` | Cuánto cobrar y por qué. |
+| `AGENTS.md` | Reglas de implementación y contratos técnicos. |
+| `docs/decisiones.md` | Decisiones de arquitectura y su justificación. |
+| `docs/infraestructura.md` | VPS, Docker, Caddy, respaldos y operación. |
+| `docs/plan-mvp.md` | Plan de trabajo por fases, equipo y riesgos. |
+| `docs/modelo-datos-mvp.md` | Pendiente: lo define Daniel antes de crear tablas. |
+| `backend/alembic/versions/` | Migraciones de base de datos (cuando exista código). |
+| `docs/cotizacion.md` | Pendiente: precio y condiciones comerciales. |
 | `docs/archive/landing/` | Documentos viejos del concepto de landing. Ignorar. |
 
 ---
@@ -312,3 +455,21 @@ REGLAS
 8. Si falta un dato, se escribe `TODO` y se avisa.
 9. Primero se diseña y se aprueba; después se programa.
 10. Confiar, pero verificar.
+
+---
+
+## 11. Estado actual y próximo paso
+
+Hoy el repositorio contiene la documentación del producto, las reglas de implementación, las decisiones de arquitectura y un **frontend modular** en `frontend/` que conserva el diseño aprobado. El backend, la base de datos y la autenticación todavía no están implementados.
+
+La arquitectura confirmada es:
+
+- Vite + React + TypeScript + pnpm.
+- FastAPI + SQLAlchemy + Alembic.
+- PostgreSQL 16.
+- Un VPS Contabo con Docker Compose y Caddy.
+- Cloudflare R2 para archivos privados y respaldos.
+
+El siguiente paso es revisar el diseño de Figma, cerrar el modelo de datos con Daniel y construir el esqueleto desplegable: login, estudiantes y un “hello world” con HTTPS, base de datos y respaldo funcionando.
+
+No se debe empezar por pagos ni por offline. Primero se valida el flujo base y la infraestructura.
