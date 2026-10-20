@@ -12,6 +12,15 @@ Estas reglas aplican a cualquier agente (OpenCode, Claude Code, Cursor, etc.) qu
 6. Leer `docs/decisiones.md`, `docs/infraestructura.md` y `docs/plan-mvp.md` antes de proponer cambios de arquitectura.
 7. No cambiar el stack ni la infraestructura sin una nueva decisión registrada en `docs/decisiones.md`.
 
+## Skills del proyecto
+
+- Para diseño o revisión de interfaces, cargar `colegio-ui-craft`.
+- Esa skill orquesta `apple-design` y `emil-design-eng`.
+- No rediseñar la identidad visual aprobada sin confirmación.
+- Para pruebas de navegador, usar `browser-qa` o `qa-testing-playwright` cuando corresponda.
+- Para backend, usar `fastapi-python` y `python-testing-patterns` cuando corresponda.
+- No cargar todas las skills a la vez; usar solo las relevantes para la tarea.
+
 ## Qué es este proyecto
 
 Sistema interno de gestión de pagos para el Colegio Eugenio Sánchez Osorio. **No es una landing page.** Tiene login, roles, panel administrativo, registro de estudiantes, cargos, pagos, abonos, comprobantes, reportes y portal de representantes. Debe funcionar sin internet al menos para registrar pagos y sincronizar después.

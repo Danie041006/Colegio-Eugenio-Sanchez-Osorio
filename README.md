@@ -139,6 +139,8 @@ Luego abre un Pull Request en GitHub. No hagas push directo a `main`.
 - Mantén el blanco dominante y el azul rey con intención.
 - Prueba en computadora y en celular.
 
+Para cambios de diseño, usa la skill `colegio-ui-craft`. Está explicada en `docs/skills.md` y combina `apple-design` con `emil-design-eng` para cuidar jerarquía, tipografía, estados y microinteracciones sin cambiar la identidad del colegio.
+
 ### 10. Si algo falla
 
 No borres archivos ni hagas `force push`. Copia el error, toma una captura y mándamela. Lo revisamos juntos.
@@ -436,6 +438,7 @@ El frontend y la API se sirven desde el mismo dominio para evitar CORS y simplif
 | `docs/decisiones.md` | Decisiones de arquitectura y su justificación. |
 | `docs/infraestructura.md` | VPS, Docker, Caddy, respaldos y operación. |
 | `docs/plan-mvp.md` | Plan de trabajo por fases, equipo y riesgos. |
+| `docs/skills.md` | Skills de diseño y desarrollo disponibles, y cómo usarlas. |
 | `docs/modelo-datos-mvp.md` | Pendiente: lo define Daniel antes de crear tablas. |
 | `backend/alembic/versions/` | Migraciones de base de datos (cuando exista código). |
 | `docs/cotizacion.md` | Pendiente: precio y condiciones comerciales. |
