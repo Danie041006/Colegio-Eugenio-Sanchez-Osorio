@@ -22,37 +22,35 @@ export function Payment({ go }: { go: (path: string) => void }) {
         <span>3</span>
         <strong>Confirmación</strong>
       </div>
-      <Card title="1. Buscar estudiante">
-        <label className="search search--wide">
-          <Icon name="search" />
-          <input aria-label="Buscar estudiante" placeholder="Nombre, documento o código del estudiante" />
-        </label>
-      </Card>
       <div className="two-cols two-cols--payment">
-        <div>
-          <Card title="2. Cargos pendientes">
-            <div className="empty-state compact">
-              <Icon name="file" />
-              <strong>Selecciona un estudiante</strong>
-              <span>Sus cargos pendientes aparecerán aquí.</span>
-            </div>
-          </Card>
-          <Card title="3. Aplicación del pago">
-            <div className="form-grid">
-              <Field label="Monto recibido" placeholder="TODO: monto" />
-              <SelectField label="Método de pago">
-                <option>Efectivo</option>
-                <option>Nequi</option>
-                <option>Bancolombia</option>
-              </SelectField>
-              <SelectField label="Cuenta de destino">
-                <option>TODO: cuenta</option>
-              </SelectField>
-              <Field label="Referencia" placeholder="TODO: referencia" />
-            </div>
-          </Card>
-        </div>
-        <Card title="Resumen">
+        <Card title="1. Buscar estudiante">
+          <label className="search search--wide">
+            <Icon name="search" />
+            <input aria-label="Buscar estudiante" placeholder="Nombre, documento o código del estudiante" />
+          </label>
+        </Card>
+        <Card title="2. Cargos pendientes">
+          <div className="empty-state compact">
+            <Icon name="file" />
+            <strong>Selecciona un estudiante</strong>
+            <span>Sus cargos pendientes aparecerán aquí.</span>
+          </div>
+        </Card>
+        <Card title="3. Aplicación del pago">
+          <div className="form-grid">
+            <Field label="Monto recibido" placeholder="TODO: monto" />
+            <SelectField label="Método de pago">
+              <option>Efectivo</option>
+              <option>Nequi</option>
+              <option>Bancolombia</option>
+            </SelectField>
+            <SelectField label="Cuenta de destino">
+              <option>TODO: cuenta</option>
+            </SelectField>
+            <Field label="Referencia" placeholder="TODO: referencia" />
+          </div>
+        </Card>
+        <Card title="Resumen" className="payment-summary">
           <div className="summary-lines">
             <span>
               Monto recibido <strong>TODO: monto</strong>
@@ -69,6 +67,9 @@ export function Payment({ go }: { go: (path: string) => void }) {
             </span>
           </div>
           <Button onClick={() => go('/comprobantes/1')}>Confirmar pago</Button>
+          <div className="summary-print">
+            <Button variant="secondary">Imprimir recibo</Button>
+          </div>
           <p className="button-helper">Verifica la información antes de confirmar.</p>
         </Card>
       </div>

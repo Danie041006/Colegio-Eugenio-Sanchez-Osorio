@@ -2,11 +2,15 @@ import { Avatar } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Field, SelectField } from '@/components/ui/form'
+import { Icon } from '@/components/ui/icon'
 import { PageHeader } from '@/components/ui/page-header'
 
 export function NewStudent({ go }: { go: (path: string) => void }) {
   return (
     <>
+      <button className="back-link" onClick={() => go('/estudiantes')}>
+        <Icon name="arrow-left" size={15} /> Volver a estudiantes
+      </button>
       <PageHeader
         eyebrow="ESTUDIANTES"
         title="Nuevo estudiante"

@@ -314,6 +314,7 @@ tbody tr:nth-child(even) td { background: #f5f8fd; }
 .profile-summary > div > span { opacity: .65; font-size: 10px; margin-bottom: 8px; }
 .two-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 .two-cols--payment { grid-template-columns: 1.6fr .75fr; align-items: start; }
+.two-cols--payment > .payment-summary { grid-column: 2; grid-row: 1 / span 2; align-self: stretch; }
 .details { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin: 0; }
 .details dt { color: var(--muted); font-size: 10px; margin-bottom: 5px; }
 .details dd { margin: 0; font-size: 12px; font-weight: 600; }
@@ -328,6 +329,7 @@ tbody tr:nth-child(even) td { background: #f5f8fd; }
 .summary-total strong { font-size: 18px; }
 .two-cols--payment > .card .button { width: 100%; }
 .button-helper { color: var(--muted); font-size: 9px; text-align: center; }
+.summary-print { margin-top: 12px; }
 
 .empty-state { min-height: 260px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; text-align: center; color: var(--muted); }
 .empty-state.compact { min-height: 130px; }
@@ -428,6 +430,7 @@ tbody tr:nth-child(even) td { background: #f5f8fd; }
   .content { padding: 28px 24px 50px; }
   .metrics, .role-cards { grid-template-columns: 1fr; }
   .dashboard-grid, .two-cols, .two-cols--payment { grid-template-columns: 1fr; }
+  .two-cols--payment > .payment-summary { grid-column: auto; grid-row: auto; align-self: auto; }
   .system-states { grid-template-columns: repeat(3,1fr); }
   .toolbar, .filters-grid { flex-wrap: wrap; }
 }
