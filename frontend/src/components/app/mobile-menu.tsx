@@ -59,13 +59,13 @@ export function MobileMenu({
         <div className="mobile-menu__secondary">
           {role !== 'representative' && (
             <button className={isPathActive(pathname, '/diseno') ? 'active' : ''} onClick={() => navigate('/diseno')}>
-              <Icon name="settings" />
+              <Icon name="palette" />
               <span>Sistema de diseño</span>
               <Icon name="arrow" size={15} />
             </button>
           )}
           <button className={isPathActive(pathname, '/perfil') ? 'active' : ''} onClick={() => navigate('/perfil')}>
-            <Icon name="child" />
+            <Icon name="profile" />
             <span>Mi perfil</span>
             <Icon name="arrow" size={15} />
           </button>

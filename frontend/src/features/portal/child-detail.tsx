@@ -7,7 +7,7 @@ export function ChildDetail({ go }: { go: (path: string) => void }) {
   return (
     <>
       <button className="back-link" onClick={() => go('/mis-hijos')}>
-        ← Mis hijos
+        <Icon name="arrow-left" size={15} /> Mis hijos
       </button>
       <div className="child-profile">
         <Avatar />

@@ -1,6 +1,7 @@
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { EmptyTable } from '@/components/ui/empty-table'
+import { Icon } from '@/components/ui/icon'
 import { PageHeader } from '@/components/ui/page-header'
 
 export function Receipt({
@@ -67,7 +68,7 @@ export function Receipt({
         </p>
       </article>
       <button className="back-link" onClick={() => go(representative ? '/comprobantes' : '/reportes')}>
-        ← Volver
+        <Icon name="arrow-left" size={15} /> Volver
       </button>
     </>
   )

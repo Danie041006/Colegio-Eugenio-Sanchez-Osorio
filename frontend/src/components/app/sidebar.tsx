@@ -29,27 +29,31 @@ export function Sidebar({
         <strong>{role === 'admin' ? 'Administración' : role === 'manager' ? 'Gestión' : 'Familias'}</strong>
       </div>
       <nav aria-label="Navegación principal">
-        {nav.map((item) => (
-          <button
-            key={item.path}
-            className={isPathActive(pathname, item.path) ? 'active' : ''}
-            onClick={() => go(item.path)}
-          >
-            <Icon name={item.icon} />
-            <span>{item.label}</span>
-            {isPathActive(pathname, item.path) && <i />}
-          </button>
-        ))}
+        {nav.map((item) => {
+          const active = isPathActive(pathname, item.path)
+          return (
+            <button
+              key={item.path}
+              className={active ? 'active' : ''}
+              onClick={() => go(item.path)}
+              aria-current={active ? 'page' : undefined}
+            >
+              <Icon name={item.icon} />
+              <span>{item.label}</span>
+              <i aria-hidden="true" />
+            </button>
+          )
+        })}
       </nav>
       <div className="sidebar__bottom">
         {role !== 'representative' && (
           <button className={isPathActive(pathname, '/diseno') ? 'active' : ''} onClick={() => go('/diseno')}>
-            <Icon name="settings" />
+            <Icon name="palette" />
             <span>Sistema de diseño</span>
           </button>
         )}
         <button className={isPathActive(pathname, '/perfil') ? 'active' : ''} onClick={() => go('/perfil')}>
-          <Icon name="child" />
+          <Icon name="profile" />
           <span>Mi perfil</span>
         </button>
         <div className="user-panel">
@@ -63,7 +67,7 @@ export function Sidebar({
             title="Cambiar rol"
             onClick={() => setRole(role === 'admin' ? 'manager' : role === 'manager' ? 'representative' : 'admin')}
           >
-            <Icon name="logout" />
+            <Icon name="swap" />
           </button>
         </div>
       </div>

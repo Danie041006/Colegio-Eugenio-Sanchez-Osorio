@@ -1,13 +1,13 @@
 import type { NavItem } from './types'
 
 export const adminNav: NavItem[] = [
-  { label: 'Panel principal', path: '/dashboard', icon: 'grid' },
+  { label: 'Panel principal', path: '/dashboard', icon: 'dashboard' },
   { label: 'Estudiantes', path: '/estudiantes', icon: 'students' },
-  { label: 'Registrar pago', path: '/pagos/nuevo', icon: 'payment' },
-  { label: 'Cobros', path: '/cobros', icon: 'file' },
-  { label: 'Reportes', path: '/reportes', icon: 'file' },
-  { label: 'Usuarios y roles', path: '/usuarios', icon: 'users' },
-  { label: 'Anulaciones', path: '/anulaciones', icon: 'shield' },
+  { label: 'Registrar pago', path: '/pagos/nuevo', icon: 'payments' },
+  { label: 'Cobros', path: '/cobros', icon: 'billing' },
+  { label: 'Reportes', path: '/reportes', icon: 'reports' },
+  { label: 'Usuarios y roles', path: '/usuarios', icon: 'roles' },
+  { label: 'Anulaciones', path: '/anulaciones', icon: 'annulments' },
 ]
 
 export const managerNav = adminNav.filter(

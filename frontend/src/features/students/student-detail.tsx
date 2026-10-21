@@ -3,18 +3,23 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { EmptyTable } from '@/components/ui/empty-table'
+import { Icon } from '@/components/ui/icon'
 import { PageHeader } from '@/components/ui/page-header'
 
 export function StudentDetail({ go }: { go: (path: string) => void }) {
   return (
     <>
       <button className="back-link" onClick={() => go('/estudiantes')}>
-        ← Volver a estudiantes
+        <Icon name="arrow-left" size={15} /> Volver a estudiantes
       </button>
       <PageHeader
         title="TODO: nombre del estudiante"
         description="TODO: documento"
-        action={<Button variant="secondary">Editar información</Button>}
+        action={
+          <Button variant="secondary" icon="edit">
+            Editar información
+          </Button>
+        }
       />
       <div className="profile-summary">
         <Avatar />
