@@ -6,15 +6,15 @@ export function Children({ go }: { go: (path: string) => void }) {
   return (
     <>
       <PageHeader
-        eyebrow="FAMILIA"
-        title="Mis hijos"
-        description="Consulta el estado de pagos de tus hijos."
+        eyebrow="ESTUDIANTES"
+        title="Mis estudiantes"
+        description="Consulta el estado académico y de pagos de tus estudiantes."
       />
       <div className="child-list">
-        <button className="child-card" onClick={() => go('/mis-hijos/1')}>
+        <button className="child-card" onClick={() => go('/mis-estudiantes/1')}>
           <Avatar />
           <div>
-            <strong>TODO: nombre del hijo</strong>
+            <strong>TODO: nombre del estudiante</strong>
             <span>TODO: grado y sección</span>
             <div>
               <small>Saldo pendiente</small>
@@ -25,7 +25,7 @@ export function Children({ go }: { go: (path: string) => void }) {
         </button>
         <div className="empty-child">
           <Icon name="plus" />
-          <span>TODO: otros hijos asociados</span>
+          <span>TODO: otros estudiantes asociados</span>
         </div>
       </div>
       <div className="mobile-help">

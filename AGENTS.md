@@ -23,7 +23,7 @@ Estas reglas aplican a cualquier agente (OpenCode, Claude Code, Cursor, etc.) qu
 
 ## Qué es este proyecto
 
-Sistema interno de gestión de pagos para el Colegio Eugenio Sánchez Osorio. **No es una landing page.** Tiene login, roles, panel administrativo, registro de estudiantes, cargos, pagos, abonos, comprobantes, reportes y portal de representantes. Debe funcionar sin internet al menos para registrar pagos y sincronizar después.
+Sistema interno de gestión escolar y pagos para el Colegio Eugenio Sánchez Osorio. **No es una landing page.** Tiene login, roles, panel administrativo, registro de estudiantes, matrícula, docentes, materias, notas, boletines, cargos, pagos, abonos, comprobantes y portal de representantes. Debe funcionar sin internet al menos para registrar pagos y sincronizar después.
 
 ## Stack
 
@@ -77,9 +77,10 @@ Sistema interno de gestión de pagos para el Colegio Eugenio Sánchez Osorio. **
 
 | Rol | Permisos |
 |---|---|
-| `ADMINISTRADOR` | Todo: usuarios, tarifas, pagos, anulaciones, reportes, configuración |
+| `ADMINISTRADOR` | Todo: usuarios, tarifas, pagos, anulaciones, reportes, docentes, materias, notas, configuración |
 | `GESTOR` | Registrar estudiantes, registrar pagos, consultar estados de pago, solicitar anulaciones |
-| `REPRESENTANTE` | Ver solo sus estudiantes autorizados, historial, saldos y comprobantes |
+| `DOCENTE` | Ver solo sus secciones y materias asignadas, cargar notas y consultar boletines de sus materias |
+| `REPRESENTANTE` | Ver solo sus estudiantes autorizados, historial, saldos, notas, boletines y comprobantes |
 
 Reglas:
 
@@ -87,6 +88,10 @@ Reglas:
 - El representante nunca accede a estudiantes que no tenga asociados.
 - Solo el administrador autoriza anulaciones de pagos confirmados.
 - El gestor no puede modificar pagos históricos ni tarifas.
+- El docente solo accede a las secciones y materias que tenga asignadas.
+- El docente no accede a información financiera.
+- Solo el administrador asigna docentes, materias y secciones.
+- Las notas se asocian a la matrícula y los cambios deben quedar auditados.
 
 ## Contrato de datos
 
@@ -105,6 +110,9 @@ Reglas:
 - Los grados, secciones y períodos conservan historial: no se sobrescriben.
 - Las fechas de negocio se interpretan en `America/Caracas`; en base de datos se guardan timestamps en UTC.
 - Todo cambio de esquema va por migración de Alembic; no se edita la base de producción a mano.
+- Notas: escala 0 a 20, tres lapsos por año y entre 4 y 6 evaluaciones configurables por lapso.
+- Las notas se asocian a la matrícula, no solo al estudiante.
+- Los boletines guardan snapshot y PDF para no alterar documentos históricos.
 
 ## Contrato de seguridad
 
@@ -195,6 +203,7 @@ backend/
       auth/
       people/
       academic/
+      grading/
       billing/
       payments/
       reports/
@@ -213,6 +222,7 @@ frontend/
       auth/
       students/
       enrollment/
+      grading/
       billing/
       payments/
       reports/

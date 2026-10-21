@@ -15,7 +15,7 @@ export const managerNav = adminNav.filter(
 )
 
 export const representativeNav: NavItem[] = [
-  { label: 'Mis hijos', path: '/mis-hijos', icon: 'students' },
+  { label: 'Mis estudiantes', path: '/mis-estudiantes', icon: 'students' },
   { label: 'Comprobantes', path: '/comprobantes', icon: 'file' },
 ]
 

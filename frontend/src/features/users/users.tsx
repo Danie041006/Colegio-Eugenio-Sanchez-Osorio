@@ -26,8 +26,8 @@ export function Users() {
         </Card>
         <Card>
           <Badge tone="warning">Representante</Badge>
-          <strong>Consulta familiar</strong>
-          <span>Visualiza sus hijos, saldos y comprobantes asociados.</span>
+          <strong>Consulta de estudiantes</strong>
+          <span>Visualiza sus estudiantes, notas, saldos y comprobantes asociados.</span>
         </Card>
       </div>
       <Card title="Usuarios">

@@ -21,7 +21,7 @@ export function Receipts({ go }: { go: (path: string) => void }) {
             <Icon name="file" />
           </div>
           <strong>TODO: comprobantes disponibles</strong>
-          <span>Los comprobantes asociados a tus hijos aparecerán aquí.</span>
+          <span>Los comprobantes asociados a tus estudiantes aparecerán aquí.</span>
           <Button variant="secondary" onClick={() => go('/comprobantes/1')}>
             Ver comprobante de muestra
           </Button>

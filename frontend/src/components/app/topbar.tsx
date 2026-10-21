@@ -36,7 +36,7 @@ export function Topbar({
           <Icon name="menu" size={23} />
         </button>
         <div>
-          <strong>{role === 'representative' ? 'Portal de familias' : 'Gestión de pagos'}</strong>
+          <strong>{role === 'representative' ? 'Portal de representantes' : 'Gestión escolar'}</strong>
           <span>{roleLabels[role]}</span>
         </div>
         <button className="menu-icon-button" onClick={() => go('/perfil')} aria-label="Abrir perfil">

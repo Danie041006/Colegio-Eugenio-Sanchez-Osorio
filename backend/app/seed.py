@@ -8,6 +8,7 @@ from app.modules.identity.models import Role
 ROLES = [
     ("ADMINISTRADOR", "Administrador", "Acceso total al sistema"),
     ("GESTOR", "Gestor", "Registro de estudiantes y pagos"),
+    ("DOCENTE", "Docente", "Carga de notas de sus secciones asignadas"),
     ("REPRESENTANTE", "Representante", "Consulta de estudiantes autorizados"),
 ]
 

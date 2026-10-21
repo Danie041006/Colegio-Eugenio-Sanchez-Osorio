@@ -32,7 +32,7 @@ No incluye:
 - Mora o intereses.
 - Facturación electrónica.
 - Pagos con tarjeta.
-- Notas, boletines o asistencia.
+- Asistencia, conducta y otras funciones académicas.
 - App nativa.
 - Reconocimiento facial.
 - Sincronización multi-dispositivo en tiempo real.
@@ -44,7 +44,7 @@ No incluye:
 - Backend: FastAPI + Pydantic v2 + SQLAlchemy 2.0 + Alembic.
 - Base de datos: PostgreSQL 16.
 - Paquetes frontend: pnpm + Node.js LTS.
-- Autenticación: librería consolidada; pendiente de elección.
+- Autenticación: `fastapi-users` con cookies `HttpOnly`.
 - Archivos: Cloudflare R2 privado.
 - Offline: PWA + IndexedDB.
 - Infraestructura: Contabo VPS + Docker Compose + Caddy.
@@ -138,7 +138,7 @@ Criterio de salida:
 ### Fase 4 — Portal, anulaciones y auditoría
 
 - Portal del representante.
-- Historial y saldos por hijo.
+- Historial y saldos por estudiante.
 - Descarga de comprobantes.
 - Solicitud de anulación.
 - Aprobación o rechazo por administrador.
@@ -152,7 +152,25 @@ Criterio de salida:
 - Una anulación restaura saldos y deja rastro.
 - El administrador puede auditar.
 
-### Fase 5 — Offline
+### Fase 5 — Docentes y notas
+
+- Rol `DOCENTE`.
+- Docentes, materias y asignaciones.
+- Tres lapsos por año.
+- Entre 4 y 6 evaluaciones configurables por lapso.
+- Notas de 0 a 20.
+- Carga de notas por docente.
+- Boletines PDF con snapshot.
+- Ficha del estudiante en tres apartados.
+
+Criterio de salida:
+
+- El administrador asigna docente, materia y sección.
+- El docente carga notas de sus asignaciones.
+- El representante ve notas y boletines de sus estudiantes.
+- El boletín PDF queda archivado.
+
+### Fase 6 — Offline
 
 - PWA instalable.
 - Cache del shell.
@@ -169,7 +187,7 @@ Criterio de salida:
 - Al volver la conexión, se sincroniza una sola vez.
 - El recibo provisional se convierte en definitivo.
 
-### Fase 6 — Piloto
+### Fase 7 — Piloto
 
 - Migración de estudiantes y saldos iniciales.
 - Capacitación a Diego y al gestor.
@@ -220,7 +238,7 @@ Si trabajan menos de 30 horas semanales entre los dos, el calendario se extiende
 |---|---|
 | Cambios de alcance | Issues, criterios de aceptación y control de cambios |
 | Datos del colegio incompletos | `TODO` visible y preguntas a Diego |
-| Offline mal diseñado | Fase 5, no al inicio; idempotencia y pruebas |
+| Offline mal diseñado | Fase 6, no al inicio; idempotencia y pruebas |
 | Pérdida de datos | Respaldos R2, restauración mensual |
 | Migraciones conflictivas | Un dueño de migraciones |
 | Pagos mal aplicados | Transacciones, constraints y pruebas |
@@ -232,8 +250,10 @@ Si trabajan menos de 30 horas semanales entre los dos, el calendario se extiende
 
 - `TODO: cuántas mensualidades y de qué mes a qué mes`.
 - `TODO: política de retiro y deuda`.
-- `TODO: descuento de hermanos`.
 - `TODO: secciones exactas y grados`.
+- `TODO: materias por grado y carga horaria`.
+- `TODO: nota mínima aprobatoria y pesos de evaluación`.
+- `TODO: si las notas se bloquean por deuda`.
 - `TODO: datos para migración desde Excel`.
 - `TODO: formato oficial del comprobante`.
 - `TODO: quién autoriza anulaciones además de Diego`.

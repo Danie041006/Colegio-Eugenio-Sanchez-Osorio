@@ -192,9 +192,10 @@ No borres archivos ni hagas `force push`. Copia el error, toma una captura y má
 
 | Rol | Quién | Qué puede hacer |
 |---|---|---|
-| **Administrador** | Profe Diego | Todo: registrar, modificar, consultar, configurar tarifas, ver reportes y autorizar anulaciones |
+| **Administrador** | Profe Diego | Todo: registrar, modificar, consultar, configurar tarifas, docentes, materias, notas, reportes y autorizar anulaciones |
 | **Gestor** | Personal de oficina | Registrar estudiantes, registrar pagos, consultar estados de pago y solicitar anulaciones |
-| **Representante** | Padres o tutores | Ver únicamente sus hijos autorizados, su historial de pagos, su saldo pendiente y descargar comprobantes |
+| **Docente** | Profesores | Ver únicamente sus secciones y materias asignadas, cargar notas y consultar boletines |
+| **Representante** | Padres o tutores | Ver únicamente sus estudiantes autorizados, historial, saldos, notas, boletines y comprobantes |
 
 Regla de oro: un representante **nunca** puede ver estudiantes que no tenga autorizados.
 
@@ -215,7 +216,7 @@ Regla de oro: un representante **nunca** puede ver estudiantes que no tenga auto
 9. **Pagos:** registrar pago completo o abono.
 10. **Aplicación del pago:** indicar a qué cargos se aplica el dinero.
 11. **Comprobante:** recibo con número único, listo para imprimir o guardar.
-12. **Portal del representante:** historial de pagos y saldo pendiente de sus hijos.
+12. **Portal del representante:** historial de pagos y saldo pendiente de sus estudiantes.
 13. **Libro de entradas:** reporte diario de lo recibido, por método y cuenta.
 14. **Anulación de pagos:** el gestor solicita, el administrador autoriza.
 15. **Auditoría:** quién hizo qué, cuándo y por qué.
@@ -230,8 +231,10 @@ Regla de oro: un representante **nunca** puede ver estudiantes que no tenga auto
 - Sincronización multi-dispositivo en tiempo real (fase 2).
 - App nativa de iOS/Android.
 - Reconocimiento facial.
-- Módulos académicos (notas, boletines, asistencia).
+- Asistencia, conducta y otras funciones académicas.
 - Pagos en línea con tarjeta.
+
+Las notas y boletines entran en la fase 2, después de cerrar el flujo de pagos.
 
 ---
 
@@ -255,8 +258,8 @@ Regla de oro: un representante **nunca** puede ver estudiantes que no tenga auto
 ### Para el representante (principalmente celular)
 
 1. **Login.**
-2. **Mis hijos:** tarjetas con foto, nombre, grado y saldo pendiente.
-3. **Detalle del hijo:** cargos pendientes e historial de pagos.
+2. **Mis estudiantes:** tarjetas con foto, nombre, grado y saldo pendiente.
+3. **Detalle del estudiante:** información personal, académica y financiera.
 4. **Comprobantes:** ver y descargar.
 
 ### Estados que no se pueden olvidar
@@ -329,7 +332,7 @@ No digas “hazlo más bonito”. Dile exactamente qué cambiar. Por ejemplo:
 - [ ] El menú se entiende sin explicación.
 - [ ] Registrar un pago se siente rápido y claro.
 - [ ] El comprobante tiene toda la información del recibo.
-- [ ] El representante solo ve a sus hijos.
+- [ ] El representante solo ve a sus estudiantes.
 - [ ] Todo se ve bien en celular.
 - [ ] No hay datos inventados: donde falta algo dice `TODO`.
 - [ ] No hay fotos de niños generadas con IA.
@@ -350,7 +353,7 @@ Estilo: blanco dominante, azul rey #1B3A8F para botones, enlaces y títulos dest
 ROLES
 1. Administrador (Diego): acceso total.
 2. Gestor: registrar estudiantes, registrar pagos, consultar estados de pago, solicitar anulaciones.
-3. Representante: ver solo sus hijos, su historial de pagos, su saldo pendiente y descargar comprobantes.
+3. Representante: ver solo sus estudiantes, su historial, saldos, notas, boletines y comprobantes.
 
 PANTALLAS DE ESCRITORIO (1440 px)
 - Login.
@@ -368,8 +371,8 @@ PANTALLAS DE ESCRITORIO (1440 px)
 
 PANTALLAS DE REPRESENTANTE (390 px)
 - Login.
-- Mis hijos: tarjetas con foto, nombre, grado y saldo pendiente.
-- Detalle del hijo: cargos pendientes e historial de pagos.
+- Mis estudiantes: tarjetas con foto, nombre, grado y saldo pendiente.
+- Detalle del estudiante: información personal, académica y financiera.
 - Comprobantes: ver y descargar.
 
 ESTADOS
@@ -439,7 +442,7 @@ El frontend y la API se sirven desde el mismo dominio para evitar CORS y simplif
 | `docs/infraestructura.md` | VPS, Docker, Caddy, respaldos y operación. |
 | `docs/plan-mvp.md` | Plan de trabajo por fases, equipo y riesgos. |
 | `docs/skills.md` | Skills de diseño y desarrollo disponibles, y cómo usarlas. |
-| `docs/modelo-datos-mvp.md` | Modelo lógico del MVP; identidad y academia ya implementadas. |
+| `docs/modelo-datos-mvp.md` | Modelo lógico del MVP; identidad, academia, docentes y notas implementados. |
 | `backend/alembic/versions/` | Migraciones; la primera crea identidad y academia. |
 | `docs/cotizacion.md` | Pendiente: precio y condiciones comerciales. |
 | `docs/archive/landing/` | Documentos viejos del concepto de landing. Ignorar. |
@@ -465,7 +468,9 @@ El frontend y la API se sirven desde el mismo dominio para evitar CORS y simplif
 
 Hoy el repositorio contiene la documentación del producto, las reglas de implementación, las decisiones de arquitectura, un **frontend modular** en `frontend/` que conserva el diseño aprobado y un **backend base** en `backend/` con FastAPI, SQLAlchemy y Alembic.
 
-La primera migración ya crea las tablas de **identidad y academia** en PostgreSQL: personas, usuarios, roles, estudiantes, representantes, grados, períodos, secciones y matrículas. La autenticación y los módulos de cobros y pagos todavía están pendientes.
+La primera migración crea las tablas de **identidad y academia**: personas, usuarios, roles, estudiantes, representantes, grados, períodos, secciones y matrículas.
+
+La segunda migración agrega **docentes, materias, lapsos, evaluaciones, notas y boletines**. La autenticación, los endpoints y los módulos de cobros y pagos todavía están pendientes.
 
 La arquitectura confirmada es:
 
@@ -475,6 +480,6 @@ La arquitectura confirmada es:
 - Un VPS Contabo con Docker Compose y Caddy.
 - Cloudflare R2 para archivos privados y respaldos.
 
-El siguiente paso es implementar autenticación con `fastapi-users` y los endpoints de estudiantes para conectar el frontend con datos reales. Después siguen cobros, pagos y comprobantes.
+El siguiente paso es implementar autenticación con `fastapi-users` y los endpoints de estudiantes para conectar el frontend con datos reales. Después siguen docentes/notas, cobros, pagos y comprobantes.
 
-No se debe empezar por pagos ni por offline. Primero se valida el flujo base y la infraestructura.
+La ficha del estudiante ya está dividida en información personal, académica y financiera. El módulo de notas queda como fase 2 y no debe retrasar el cierre del flujo de pagos.

@@ -14,5 +14,13 @@ def test_first_migration_tables_are_registered() -> None:
         "academic_years",
         "sections",
         "enrollments",
+        "teachers",
+        "subjects",
+        "grade_subjects",
+        "teaching_assignments",
+        "grading_periods",
+        "assessments",
+        "student_grades",
+        "report_cards",
     }
     assert expected.issubset(set(Base.metadata.tables))

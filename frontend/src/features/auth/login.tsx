@@ -19,7 +19,7 @@ export function Login({ onLogin }: { onLogin: (role: Role) => void }) {
         </div>
         <div>
           <p>SISTEMA INTERNO</p>
-          <h1>Gestión clara y segura de los pagos escolares.</h1>
+          <h1>Gestión escolar clara y segura.</h1>
           <span>Acceso exclusivo para personal autorizado y representantes.</span>
         </div>
         <small>TODO: información institucional</small>

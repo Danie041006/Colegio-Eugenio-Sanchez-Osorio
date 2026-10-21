@@ -31,12 +31,12 @@ export default function App() {
 
   const setRole = (nextRole: Role) => {
     setRoleState(nextRole)
-    go(nextRole === 'representative' ? '/mis-hijos' : '/dashboard')
+    go(nextRole === 'representative' ? '/mis-estudiantes' : '/dashboard')
   }
 
   const handleLogin = (nextRole: Role) => {
     setRoleState(nextRole)
-    go(nextRole === 'representative' ? '/mis-hijos' : '/dashboard')
+    go(nextRole === 'representative' ? '/mis-estudiantes' : '/dashboard')
   }
 
   if (location.pathname === '/login') {
@@ -66,8 +66,8 @@ export default function App() {
             <Route path="/anulaciones" element={<Cancellations />} />
             <Route path="/perfil" element={<Profile />} />
             <Route path="/diseno" element={<DesignSystem />} />
-            <Route path="/mis-hijos" element={<Children go={go} />} />
-            <Route path="/mis-hijos/:id" element={<ChildDetail go={go} />} />
+            <Route path="/mis-estudiantes" element={<Children go={go} />} />
+            <Route path="/mis-estudiantes/:id" element={<ChildDetail go={go} />} />
             <Route path="/comprobantes" element={<Receipts go={go} />} />
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Routes>

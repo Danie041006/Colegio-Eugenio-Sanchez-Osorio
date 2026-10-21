@@ -10,6 +10,7 @@ from sqlalchemy import (
     ForeignKeyConstraint,
     Index,
     Integer,
+    SmallInteger,
     String,
     Text,
     UniqueConstraint,
@@ -175,6 +176,11 @@ class Section(Base):
             "academic_year_id",
             name="uq_sections_id_grade_year",
         ),
+        UniqueConstraint(
+            "id",
+            "academic_year_id",
+            name="uq_sections_id_academic_year",
+        ),
         Index("ix_sections_academic_year_id", "academic_year_id"),
         Index("ix_sections_grade_id", "grade_id"),
     )
@@ -232,4 +238,143 @@ class Enrollment(TimestampMixin, Base):
         ),
         Index("ix_enrollments_section_id", "section_id"),
         Index("ix_enrollments_academic_year_id", "academic_year_id"),
+    )
+
+
+class Teacher(TimestampMixin, Base):
+    __tablename__ = "teachers"
+
+    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
+    person_id: Mapped[int] = mapped_column(
+        BigInteger,
+        ForeignKey("people.id", ondelete="RESTRICT", onupdate="RESTRICT"),
+        nullable=False,
+        unique=True,
+    )
+    employee_code: Mapped[str | None] = mapped_column(String(40), unique=True)
+    status: Mapped[str] = mapped_column(
+        String(20),
+        nullable=False,
+        server_default=text("'ACTIVE'"),
+    )
+
+    __table_args__ = (
+        CheckConstraint("status IN ('ACTIVE', 'INACTIVE')", name="status"),
+        Index("ix_teachers_status", "status"),
+    )
+
+
+class Subject(Base):
+    __tablename__ = "subjects"
+
+    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
+    code: Mapped[str] = mapped_column(String(30), nullable=False, unique=True)
+    name: Mapped[str] = mapped_column(String(120), nullable=False)
+    area: Mapped[str | None] = mapped_column(String(80))
+    is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, server_default=text("true"))
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        server_default=func.now(),
+        nullable=False,
+    )
+
+
+class GradeSubject(Base):
+    __tablename__ = "grade_subjects"
+
+    grade_id: Mapped[int] = mapped_column(
+        BigInteger,
+        ForeignKey("grades.id", ondelete="RESTRICT", onupdate="RESTRICT"),
+        primary_key=True,
+    )
+    subject_id: Mapped[int] = mapped_column(
+        BigInteger,
+        ForeignKey("subjects.id", ondelete="RESTRICT", onupdate="RESTRICT"),
+        primary_key=True,
+    )
+    weekly_hours: Mapped[int | None] = mapped_column(SmallInteger)
+    is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, server_default=text("true"))
+
+    __table_args__ = (Index("ix_grade_subjects_subject_id", "subject_id"),)
+
+
+class TeachingAssignment(Base):
+    __tablename__ = "teaching_assignments"
+
+    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
+    teacher_id: Mapped[int] = mapped_column(
+        BigInteger,
+        ForeignKey("teachers.id", ondelete="RESTRICT", onupdate="RESTRICT"),
+        nullable=False,
+    )
+    subject_id: Mapped[int] = mapped_column(
+        BigInteger,
+        ForeignKey("subjects.id", ondelete="RESTRICT", onupdate="RESTRICT"),
+        nullable=False,
+    )
+    section_id: Mapped[int] = mapped_column(BigInteger, nullable=False)
+    academic_year_id: Mapped[int] = mapped_column(BigInteger, nullable=False)
+    is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, server_default=text("true"))
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        server_default=func.now(),
+        nullable=False,
+    )
+
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ["section_id", "academic_year_id"],
+            ["sections.id", "sections.academic_year_id"],
+            name="fk_teaching_assignments_section_year",
+            ondelete="RESTRICT",
+            onupdate="RESTRICT",
+        ),
+        Index(
+            "uq_teaching_assignments_active",
+            "subject_id",
+            "section_id",
+            "academic_year_id",
+            unique=True,
+            postgresql_where=text("is_active IS TRUE"),
+        ),
+        Index("ix_teaching_assignments_teacher_id", "teacher_id"),
+        Index("ix_teaching_assignments_subject_id", "subject_id"),
+        Index("ix_teaching_assignments_section_id", "section_id"),
+    )
+
+
+class GradingPeriod(Base):
+    __tablename__ = "grading_periods"
+
+    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
+    academic_year_id: Mapped[int] = mapped_column(
+        BigInteger,
+        ForeignKey("academic_years.id", ondelete="RESTRICT", onupdate="RESTRICT"),
+        nullable=False,
+    )
+    name: Mapped[str] = mapped_column(String(60), nullable=False)
+    sequence: Mapped[int] = mapped_column(SmallInteger, nullable=False)
+    start_date: Mapped[date] = mapped_column(Date, nullable=False)
+    end_date: Mapped[date] = mapped_column(Date, nullable=False)
+    status: Mapped[str] = mapped_column(
+        String(20),
+        nullable=False,
+        server_default=text("'PLANNED'"),
+    )
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        server_default=func.now(),
+        nullable=False,
+    )
+
+    __table_args__ = (
+        UniqueConstraint(
+            "academic_year_id",
+            "sequence",
+            name="uq_grading_periods_year_sequence",
+        ),
+        CheckConstraint("sequence BETWEEN 1 AND 3", name="sequence"),
+        CheckConstraint("start_date < end_date", name="dates"),
+        CheckConstraint("status IN ('PLANNED', 'ACTIVE', 'CLOSED')", name="status"),
+        Index("ix_grading_periods_academic_year_id", "academic_year_id"),
     )

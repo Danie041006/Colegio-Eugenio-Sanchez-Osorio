@@ -182,7 +182,29 @@ Reglas:
 - Un retiro o graduación se registra con estado y fecha; no se borra.
 - Los cargos se generan por matrícula, no por estudiante suelto.
 
-## Cobros (segunda migración)
+## Docentes y notas (segunda migración)
+
+- `teachers`: persona, código de empleado y estado.
+- `subjects`: materias.
+- `grade_subjects`: materias que corresponden a cada grado.
+- `teaching_assignments`: docente, materia, sección y año escolar.
+- `grading_periods`: 3 lapsos por año escolar.
+- `assessments`: 4 a 6 evaluaciones configurables por lapso.
+- `student_grades`: notas por evaluación y matrícula.
+- `report_cards`: boletín por estudiante y lapso, con snapshot y PDF.
+
+Reglas:
+
+- Escala de notas de 0 a 20.
+- Tres lapsos por año escolar.
+- El docente puede crear entre 4 y 6 evaluaciones por materia y lapso.
+- El administrador asigna docentes, materias y secciones.
+- Un docente solo ve las secciones y materias que tiene asignadas.
+- La nota se asocia a la matrícula, no solo al estudiante.
+- El boletín se genera por lapso y se guarda con snapshot para que un cambio posterior no altere el PDF emitido.
+- Ver notas con deuda pendiente de confirmar con Diego.
+
+## Cobros (tercera migración)
 
 - `currencies`: COP activa; VES/USD inactivas.
 - `fee_concepts`: inscripción, mensualidad, otros.
@@ -195,9 +217,9 @@ Reglas:
 - Las mensualidades son configurables; no se hardcodea el número.
 - Un cargo conserva su monto original.
 - No hay dos cargos activos iguales para la misma matrícula, concepto y período.
-- El descuento de hermanos queda pendiente; se agregará con `benefits` y `enrollment_benefits`.
+- No hay descuento por hermanos: cada estudiante paga su propia tarifa.
 
-## Pagos (tercera migración)
+## Pagos (cuarta migración)
 
 - `payment_methods`: efectivo, transferencia.
 - `collection_accounts`: caja, Nequi, Bancolombia.
@@ -235,7 +257,7 @@ Para el MVP:
 - Conversión multimoneda.
 - Mora e intereses.
 - Facturación electrónica.
-- Notas, boletines y asistencia.
+- Asistencia, conducta y otras funciones académicas.
 - Sincronización multi-dispositivo en tiempo real.
 - Integración bancaria automática.
 - App nativa.
@@ -243,9 +265,12 @@ Para el MVP:
 ## Pendientes con el colegio
 
 - `TODO`: número de mensualidades y meses.
-- `TODO`: regla de descuento de hermanos.
 - `TODO`: política de retiro con deuda.
 - `TODO`: fechas exactas del período 2026-2027.
 - `TODO`: grados y secciones exactos.
 - `TODO`: formato legal del comprobante.
 - `TODO`: quién más puede aprobar anulaciones.
+- `TODO`: nota mínima aprobatoria.
+- `TODO`: pesos de las evaluaciones por lapso.
+- `TODO`: si las notas se bloquean por deuda.
+- `TODO`: materias por grado y carga horaria.

@@ -75,12 +75,14 @@ ruff format --check .
 ## Estado
 
 Primera migración: identidad y academia.
+Segunda migración: docentes, materias, lapsos, evaluaciones, notas y boletines.
 
 Pendiente:
 
+- Autenticación con `fastapi-users` y endpoints.
 - Cobros y tarifas.
 - Pagos, aplicaciones y anulaciones.
 - Auditoría e institución.
-- Autenticación con `fastapi-users`.
+- Generación de boletín PDF.
 - Comprobante PDF.
 - Offline.

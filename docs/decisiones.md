@@ -169,6 +169,41 @@ La base de datos estará en el VPS. Los snapshots de Contabo no son suficientes 
 - Se necesita una librería de PDF en el backend (WeasyPrint o ReportLab).
 - El snapshot se guarda en `payments.receipt_snapshot` y el PDF en almacenamiento privado.
 
+## ADR-008 — Sin descuento por hermanos
+
+**Estado:** Aceptada.
+
+**Decisión:**
+- No existe descuento por cantidad de hermanos.
+- Cada estudiante paga su propia tarifa.
+- No se crea tabla de grupo familiar ni beneficios por hermanos.
+- El representante puede tener varios estudiantes, pero cada uno tiene cargos independientes.
+
+**Consecuencias:**
+- Se simplifica el modelo de cargos.
+- No se necesita `benefits` ni `enrollment_benefits` para hermanos.
+- Si más adelante existen becas o convenios, se modelan como un módulo separado.
+
+## ADR-009 — Módulo de docentes y notas
+
+**Estado:** Aceptada.
+
+**Decisiones:**
+- Tres lapsos por año escolar.
+- Escala de notas de 0 a 20.
+- Entre 4 y 6 evaluaciones configurables por lapso.
+- El administrador asigna docentes, materias y secciones.
+- El docente solo ve sus asignaciones.
+- El boletín se genera en PDF por estudiante y lapso.
+- La nota se asocia a la matrícula.
+- El boletín guarda snapshot para no alterar documentos históricos.
+- Ver notas con deuda queda pendiente de confirmar con Diego.
+
+**Consecuencias:**
+- Se agrega el rol `DOCENTE`.
+- Se agregan tablas de docentes, materias, asignaciones, lapsos, evaluaciones, notas y boletines.
+- La ficha del estudiante se separa en información personal, académica y financiera.
+
 ## Decisiones pendientes
 
 - Dominio definitivo.
@@ -176,4 +211,6 @@ La base de datos estará en el VPS. Los snapshots de Contabo no son suficientes 
 - Buckets y credenciales de R2.
 - RPO/RTO aceptados por el colegio.
 - Modelo de datos de cobros y pagos (siguiente migración).
-- Política de retiro, mensualidades y descuento de hermanos.
+- Política de retiro y mensualidades.
+- Nota mínima aprobatoria y pesos de evaluación.
+- Si las notas se bloquean por deuda.

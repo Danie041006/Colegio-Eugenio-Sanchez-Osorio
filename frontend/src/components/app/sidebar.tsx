@@ -25,8 +25,8 @@ export function Sidebar({
         </div>
       </div>
       <div className="sidebar__context">
-        <span>GESTIÓN DE PAGOS</span>
-        <strong>{role === 'admin' ? 'Administración' : role === 'manager' ? 'Gestión' : 'Familias'}</strong>
+        <span>GESTIÓN ESCOLAR</span>
+        <strong>{role === 'admin' ? 'Administración' : role === 'manager' ? 'Gestión' : 'Representantes'}</strong>
       </div>
       <nav aria-label="Navegación principal">
         {nav.map((item) => {
