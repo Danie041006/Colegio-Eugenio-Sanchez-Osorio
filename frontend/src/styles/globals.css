@@ -121,11 +121,12 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px s
 .eyebrow { color: var(--royal) !important; font-size: 10px !important; line-height: 1; font-weight: 800; letter-spacing: .14em; }
 .date-chip { padding: 10px 14px; border: 1px solid var(--line); background: white; border-radius: 8px; color: var(--muted); font-size: 12px; }
 
-.button { min-height: 44px; border-radius: 8px; border: 1px solid transparent; padding: 0 16px; display: inline-flex; justify-content: center; align-items: center; gap: 8px; font-size: 13px; font-weight: 650; transition: background .15s; }
+.button { min-height: 44px; border-radius: 8px; border: 1px solid transparent; padding: 0 16px; display: inline-flex; justify-content: center; align-items: center; gap: 8px; font-size: 13px; font-weight: 650; transition: background .15s, color .15s, border-color .15s; }
 .button--primary { background: var(--royal); color: white; }
 .button--primary:hover { background: var(--navy); }
 .button--secondary { background: white; color: var(--navy); border-color: #b9c5d6; }
 .button--secondary:hover { background: #f2f5fa; }
+.button--royal-hover:hover { background: var(--royal); border-color: var(--royal); color: white; }
 .button--danger { color: white; background: var(--danger); }
 .button--ghost { color: var(--royal); background: transparent; }
 .text-link, .back-link { border: 0; background: transparent; color: var(--royal); font-size: 12px; font-weight: 650; display: inline-flex; align-items: center; gap: 3px; min-height: 44px; padding: 0; }

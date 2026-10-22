@@ -21,7 +21,7 @@ export function StudentDetail({ go }: { go: (path: string) => void }) {
         title="TODO: nombre del estudiante"
         description="TODO: documento"
         action={
-          <Button variant="secondary" icon="edit">
+          <Button variant="secondary" icon="edit" className="button--royal-hover">
             Editar información
           </Button>
         }
